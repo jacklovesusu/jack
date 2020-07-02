@@ -17,7 +17,6 @@ def results():
     t_at_zero = t_now.replace(hour=0, minute=0, second=0, microsecond=0)
 
     id_lowwer_bound = ObjectId.from_datetime(t_at_zero)
-    id_upper_bound = ObjectId.from_datetime(t_now)
 
     #用户总数
     all_users = db.users.count_documents({
@@ -29,8 +28,7 @@ def results():
             {'$match': {'behavior': 0,
                         'deletable':{'$ne':True},
                         '_id': {
-                                '$gte': id_lowwer_bound,
-                                '$lte': id_upper_bound},
+                                '$gte': id_lowwer_bound},
                                 }},
             {'$project': {'user': 1}}
         ]))
@@ -42,8 +40,7 @@ def results():
             {'$match': {'behavior': 6,
                         'deletable':{'$ne':True},
                       '_id': {
-                                '$gte': id_lowwer_bound,
-                                '$lte': id_upper_bound},
+                                '$gte': id_lowwer_bound},
                                 }},
             {'$project': {'user': 1}},
         ]))
@@ -54,8 +51,7 @@ def results():
     comment_user_list = list(db.comments.aggregate([
             {'$match': {'status': '1',
                         '_id': {
-                            '$gte': id_lowwer_bound,
-                            '$lte': id_upper_bound }
+                            '$gte': id_lowwer_bound}
                             }},
             {'$project': {'user': 1}},
         ]))
@@ -66,8 +62,8 @@ def results():
     danmaku_user_list = list(db.danmakus.aggregate([
             {'$match': {'status': '1',
                         '_id': {
-                            '$gte': id_lowwer_bound,
-                            '$lte': id_upper_bound}}},
+                            '$gte': id_lowwer_bound}
+                       }},
             {'$project': {'user': 1}},
         ]))
     danmaku_user = len(set([str(d['user']) for d in danmaku_user_list]))
@@ -77,8 +73,8 @@ def results():
     follow_user_list = list(db.follows.aggregate([
             {'$match': {'type': {'$in': [1, 2, 3]},
                         '_id': {
-                            '$gte': id_lowwer_bound,
-                            '$lte': id_upper_bound}}},
+                            '$gte': id_lowwer_bound}
+                       }},
             {'$project': {'user': 1}},
         ]))
     follow_user = len(set([str(f['user']) for f in follow_user_list]))
@@ -88,8 +84,8 @@ def results():
     preference_user_list = list(db.preferences.aggregate([
             {'$match': {'state': 1,
                         '_id': {
-                            '$gte': id_lowwer_bound,
-                            '$lte': id_upper_bound}}},
+                            '$gte': id_lowwer_bound}
+                       }},
             {'$project': {'user': 1}},
         ]))
     preference_user = len(set([str(pr['user']) for pr in preference_user_list]))
