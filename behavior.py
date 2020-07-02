@@ -20,9 +20,9 @@ def results():
     id_upper_bound = ObjectId.from_datetime(t_now)
 
     #用户总数
-    all_users = len(list(db.users.aggregate([
-        {'$match':{'userType':{'$in':['entity','other']}}}
-])))
+    all_users = db.users.count_documents({
+        'userType': {'$in': ['entity', 'other']}
+        })
 
     #观看
     play_user_list = list(db.actions.aggregate([
